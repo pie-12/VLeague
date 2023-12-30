@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import DBS.DBController;
 
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -23,6 +24,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.ItemListener;
@@ -42,7 +44,12 @@ public class PlayerGUI_JFrame extends JFrame{
 
 	private Vector vector_Row, vector_Column;
 	
-
+	public Icon getIcon(String d) {
+		int width = 250, height = 300;
+		Image image = new ImageIcon(getClass().getResource("/IMG/" + d + ".png")).getImage();
+		Icon icon = new ImageIcon(image.getScaledInstance(width, height, image.SCALE_SMOOTH));
+		return icon;
+	}
 	public static String get_idClub() {
 		String res = null;
 		Connection conn = new DBController().getConnection();
@@ -60,11 +67,11 @@ public class PlayerGUI_JFrame extends JFrame{
 	public static Vector getvRow() {
 		Connection conn = new DBController().getConnection();
 		Vector vD = new Vector();
-		
-		String sql = "SELECT * FROM vleague.footballplayer JOIN vleague.footballclub ON footballplayer.club_ID = footballclub.club_ID WHERE footballclub.club_name = ?";
+		String id_Club = get_idClub();
+		String sql = "SELECT * FROM vleague.footballplayer WHERE footballplayer.club_ID = ?";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.setString(1, clubCombobox.getSelectedItem().toString());
+			statement.setString(1, id_Club);
 			ResultSet resultSet = statement.executeQuery();
 			while(resultSet.next()) {
 				Vector vtemp = new Vector();
@@ -86,12 +93,15 @@ public class PlayerGUI_JFrame extends JFrame{
 	}
 	
 	public PlayerGUI_JFrame(){
-		this.setSize(1000,505);
+		this.setSize(1014,542);
 		getContentPane().setLayout(null);
 		
+				
+		
+		
 		JPanel panel = new JPanel();
-		panel.setBounds(234, 396, 742, 37);
-		panel.setLayout(new FlowLayout(FlowLayout.LEFT, 108, 0));
+		panel.setBounds(194, 396, 772, 37);
+		panel.setLayout(new FlowLayout(FlowLayout.LEFT, 118, 0));
 		getContentPane().add(panel);
 		panel.setOpaque(false);
 		
@@ -101,7 +111,7 @@ public class PlayerGUI_JFrame extends JFrame{
 		getContentPane().add(Back_Button);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(48, 56, 120, 322);
+		panel_1.setBounds(18, 56, 120, 322);
 		getContentPane().add(panel_1);
 		panel_1.setLayout(new FlowLayout(FlowLayout.RIGHT, 7, 30));
 		panel_1.setOpaque(false); //trong suốt
@@ -119,7 +129,7 @@ public class PlayerGUI_JFrame extends JFrame{
 		JLabel ShirtNumber_Label = new JLabel("Shirt Number:");
 		ShirtNumber_Label.setForeground(Color.WHITE);
 		ShirtNumber_Label.setFont(new Font("Tahoma", Font.BOLD, 13));
-		panel_1.add(ShirtNumber_Label);
+		panel_1.add(ShirtNumber_Label); 
 		
 		JLabel Position_Label = new JLabel("Position:");
 		Position_Label.setForeground(Color.WHITE);
@@ -137,7 +147,7 @@ public class PlayerGUI_JFrame extends JFrame{
 		panel_1.add(Nationality_Label);
 		
 		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(164, 59, 168, 140);
+		panel_2.setBounds(134, 59, 168, 140);
 		getContentPane().add(panel_2);
 		panel_2.setLayout(new FlowLayout(FlowLayout.LEFT, 8, 26));
 		panel_2.setOpaque(false);
@@ -164,13 +174,13 @@ public class PlayerGUI_JFrame extends JFrame{
 		Age_TextField.setColumns(4);
 		
 		JComboBox Position_comboBox = new JComboBox();
-		Position_comboBox.setBounds(171, 224, 100, 21);
+		Position_comboBox.setBounds(141, 224, 100, 21);
 		getContentPane().add(Position_comboBox);
-		Position_comboBox.setModel(new DefaultComboBoxModel(new String[] {"Striker",  "Midfielder" , "Defender", "Goalkeeper"}));
+		Position_comboBox.setModel(new DefaultComboBoxModel(new String[] {"Forward",  "Midfielder" , "Defender", "Goalkeeper"}));
 		Position_comboBox.setSelectedIndex(-1);
 		
 		JPanel panel_2_1 = new JPanel();
-		panel_2_1.setBounds(164, 244, 168, 134);
+		panel_2_1.setBounds(134, 244, 168, 134);
 		getContentPane().add(panel_2_1);
 		panel_2_1.setLayout(new FlowLayout(FlowLayout.LEFT, 8, 26));
 		panel_2_1.setOpaque(false);
@@ -194,7 +204,7 @@ public class PlayerGUI_JFrame extends JFrame{
 		
 		//	
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(342, 84, 603, 294);
+		scrollPane.setBounds(312, 84, 633, 294);
 		getContentPane().add(scrollPane);
 		
 		clubCombobox = new JComboBox();
@@ -205,8 +215,31 @@ public class PlayerGUI_JFrame extends JFrame{
 				vector_Row = getvRow();
 				table.setModel(new DefaultTableModel(vector_Row, vector_Column));
 				scrollPane.setViewportView(table);	
+				
+				
 			}
 		});
+		JLabel club_Label = new JLabel("");
+		club_Label.setBounds(101, 343, 185, 140);
+		clubCombobox.addActionListener(new ActionListener() {
+            
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // Xử lý sự kiện khi giá trị thay đổi
+                    String selectedItem = (String) get_idClub();
+                    if (selectedItem != null) {
+                        Icon icon = getIcon(selectedItem);                        
+                        club_Label.setIcon(icon);
+                    }
+                } catch (Exception ex) {
+                   
+                    ex.printStackTrace();
+                }
+            }
+        });
+		this.add(club_Label);
+		
+		
 		clubCombobox.setModel(new DefaultComboBoxModel(new String[] {"Free Agents" , "Becamex Bình Dương" , "Công An Hà Nội" , "Đông Á Thanh Hóa" , "Hà Nội FC" , "Hải Phòng" , "LPBank Hoàng Anh Gia Lai" , "Hồng Lĩnh Hà Tĩnh" , "Khánh Hòa" , "Quảng Nam" , "MerryLand Quy Nhơn Bình Định" , "Sông Lam Nghệ An" , "Thép Xanh Nam Định" , "TP Hồ Chí Minh" , "Thể Công – Viettel" }));
 		clubCombobox.setBounds(440, 32, 222, 21);
 		getContentPane().add(clubCombobox);
@@ -416,13 +449,17 @@ public class PlayerGUI_JFrame extends JFrame{
 		getContentPane().add(ClubName_Label);
 		
 		
+
+
+		
 		JLabel Background = new JLabel("");
 		Background.setIcon(new ImageIcon(PlayerGUI_JFrame.class.getResource("/IMG/gg.png")));
 		Background.setBounds(0, 0, 1000, 505);
+
 		getContentPane().add(Background);		
 		//----------//
 		this.setVisible(true);
-		this.setResizable(false);
+		//this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);		
 	}
