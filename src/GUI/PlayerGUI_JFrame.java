@@ -50,6 +50,7 @@ public class PlayerGUI_JFrame extends JFrame{
 		Icon icon = new ImageIcon(image.getScaledInstance(width, height, image.SCALE_SMOOTH));
 		return icon;
 	}
+	
 	public static String get_idClub() {
 		String res = null;
 		Connection conn = new DBController().getConnection();
