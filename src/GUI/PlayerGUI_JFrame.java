@@ -101,7 +101,7 @@ public class PlayerGUI_JFrame extends JFrame{
 		
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(194, 396, 772, 37);
+		panel.setBounds(194, 388, 772, 37);
 		panel.setLayout(new FlowLayout(FlowLayout.LEFT, 118, 0));
 		getContentPane().add(panel);
 		panel.setOpaque(false);
@@ -112,7 +112,7 @@ public class PlayerGUI_JFrame extends JFrame{
 		getContentPane().add(Back_Button);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(18, 56, 120, 322);
+		panel_1.setBounds(18, 48, 120, 322);
 		getContentPane().add(panel_1);
 		panel_1.setLayout(new FlowLayout(FlowLayout.RIGHT, 7, 30));
 		panel_1.setOpaque(false); //trong suốt
@@ -148,7 +148,7 @@ public class PlayerGUI_JFrame extends JFrame{
 		panel_1.add(Nationality_Label);
 		
 		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(134, 59, 168, 140);
+		panel_2.setBounds(134, 51, 168, 140);
 		getContentPane().add(panel_2);
 		panel_2.setLayout(new FlowLayout(FlowLayout.LEFT, 8, 26));
 		panel_2.setOpaque(false);
@@ -175,13 +175,13 @@ public class PlayerGUI_JFrame extends JFrame{
 		Age_TextField.setColumns(4);
 		
 		JComboBox Position_comboBox = new JComboBox();
-		Position_comboBox.setBounds(141, 224, 100, 21);
+		Position_comboBox.setBounds(141, 216, 100, 21);
 		getContentPane().add(Position_comboBox);
 		Position_comboBox.setModel(new DefaultComboBoxModel(new String[] {"Forward",  "Midfielder" , "Defender", "Goalkeeper"}));
 		Position_comboBox.setSelectedIndex(-1);
 		
 		JPanel panel_2_1 = new JPanel();
-		panel_2_1.setBounds(134, 244, 168, 134);
+		panel_2_1.setBounds(134, 236, 168, 134);
 		getContentPane().add(panel_2_1);
 		panel_2_1.setLayout(new FlowLayout(FlowLayout.LEFT, 8, 26));
 		panel_2_1.setOpaque(false);
@@ -205,7 +205,7 @@ public class PlayerGUI_JFrame extends JFrame{
 		
 		//	
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(312, 84, 633, 294);
+		scrollPane.setBounds(312, 76, 633, 294);
 		getContentPane().add(scrollPane);
 		
 		clubCombobox = new JComboBox();
@@ -221,7 +221,7 @@ public class PlayerGUI_JFrame extends JFrame{
 			}
 		});
 		JLabel club_Label = new JLabel("");
-		club_Label.setBounds(101, 343, 185, 140);
+		club_Label.setBounds(42, 344, 258, 160);
 		clubCombobox.addActionListener(new ActionListener() {
             
             public void actionPerformed(ActionEvent e) {
@@ -238,11 +238,11 @@ public class PlayerGUI_JFrame extends JFrame{
                 }
             }
         });
-		this.add(club_Label);
+		getContentPane().add(club_Label);
 		
 		
 		clubCombobox.setModel(new DefaultComboBoxModel(new String[] {"Free Agents" , "Becamex Bình Dương" , "Công An Hà Nội" , "Đông Á Thanh Hóa" , "Hà Nội FC" , "Hải Phòng" , "LPBank Hoàng Anh Gia Lai" , "Hồng Lĩnh Hà Tĩnh" , "Khánh Hòa" , "Quảng Nam" , "MerryLand Quy Nhơn Bình Định" , "Sông Lam Nghệ An" , "Thép Xanh Nam Định" , "TP Hồ Chí Minh" , "Thể Công – Viettel" }));
-		clubCombobox.setBounds(440, 32, 222, 21);
+		clubCombobox.setBounds(440, 30, 222, 21);
 		getContentPane().add(clubCombobox);
 		//
 		
@@ -446,7 +446,7 @@ public class PlayerGUI_JFrame extends JFrame{
 		JLabel ClubName_Label = new JLabel("Club Name:");
 		ClubName_Label.setForeground(Color.WHITE);
 		ClubName_Label.setFont(new Font("Tahoma", Font.BOLD, 14));
-		ClubName_Label.setBounds(342, 33, 100, 16);
+		ClubName_Label.setBounds(342, 31, 100, 16);
 		getContentPane().add(ClubName_Label);
 		
 		
