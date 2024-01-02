@@ -23,6 +23,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -31,7 +32,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 
 
-public class PlayerGUI_JFrame extends JFrame{
+public class PlayerGUI extends JFrame{
 	private JTextField ID_TextField;
 	private JTextField PlayerName_TextField;
 	private JTextField ShirtNumber_TextField;
@@ -41,12 +42,11 @@ public class PlayerGUI_JFrame extends JFrame{
 	private JTextField Height_TextField;
 	private JTable table;
 	private static JComboBox clubCombobox;
-
 	private Vector vector_Row, vector_Column;
 	
-	public Icon getIcon(String d) {
-		int width = 250, height = 300;
-		Image image = new ImageIcon(getClass().getResource("/IMG/" + d + ".png")).getImage();
+	public Icon getIcon(String link) {
+		int width = 150, height = 150;
+		Image image = new ImageIcon(getClass().getResource("/IMG/" + link + ".png")).getImage();
 		Icon icon = new ImageIcon(image.getScaledInstance(width, height, image.SCALE_SMOOTH));
 		return icon;
 	}
@@ -65,6 +65,7 @@ public class PlayerGUI_JFrame extends JFrame{
 		}
 		return res;				
 	}
+	
 	public static Vector getvRow() {
 		Connection conn = new DBController().getConnection();
 		Vector vD = new Vector();
@@ -93,27 +94,22 @@ public class PlayerGUI_JFrame extends JFrame{
 		return vD;
 	}
 	
-	public PlayerGUI_JFrame(){
-		this.setSize(1014,542);
-		getContentPane().setLayout(null);
-		
-				
-		
-		
+	public PlayerGUI(){
+		//---------------Khai báo các component---------------//			
 		JPanel panel = new JPanel();
-		panel.setBounds(194, 388, 772, 37);
+		panel.setBounds(194, 450, 772, 37);
 		panel.setLayout(new FlowLayout(FlowLayout.LEFT, 118, 0));
-		getContentPane().add(panel);
+		this.add(panel);
 		panel.setOpaque(false);
 		
 		JButton Back_Button = new JButton("Back");
 		Back_Button.setFont(new Font("Tahoma", Font.BOLD, 10));
 		Back_Button.setBounds(0, 0, 65, 21);
-		getContentPane().add(Back_Button);
+		this.add(Back_Button);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(18, 48, 120, 322);
-		getContentPane().add(panel_1);
+		this.add(panel_1);
 		panel_1.setLayout(new FlowLayout(FlowLayout.RIGHT, 7, 30));
 		panel_1.setOpaque(false); //trong suốt
 		
@@ -149,7 +145,7 @@ public class PlayerGUI_JFrame extends JFrame{
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBounds(134, 51, 168, 140);
-		getContentPane().add(panel_2);
+		this.add(panel_2);
 		panel_2.setLayout(new FlowLayout(FlowLayout.LEFT, 8, 26));
 		panel_2.setOpaque(false);
 		
@@ -176,54 +172,53 @@ public class PlayerGUI_JFrame extends JFrame{
 		
 		JComboBox Position_comboBox = new JComboBox();
 		Position_comboBox.setBounds(141, 216, 100, 21);
-		getContentPane().add(Position_comboBox);
+		this.add(Position_comboBox);
 		Position_comboBox.setModel(new DefaultComboBoxModel(new String[] {"Forward",  "Midfielder" , "Defender", "Goalkeeper"}));
 		Position_comboBox.setSelectedIndex(-1);
 		
-		JPanel panel_2_1 = new JPanel();
-		panel_2_1.setBounds(134, 236, 168, 134);
-		getContentPane().add(panel_2_1);
-		panel_2_1.setLayout(new FlowLayout(FlowLayout.LEFT, 8, 26));
-		panel_2_1.setOpaque(false);
+		JPanel panel_3 = new JPanel();
+		panel_3.setBounds(134, 236, 168, 134);
+		this.add(panel_3);
+		panel_3.setLayout(new FlowLayout(FlowLayout.LEFT, 8, 26));
+		panel_3.setOpaque(false);
 		
 		Weight_TextField = new JTextField();
 		Weight_TextField.setColumns(4);
-		panel_2_1.add(Weight_TextField);
+		panel_3.add(Weight_TextField);
 		
 		JLabel Height_Label = new JLabel("Height:");
 		Height_Label.setForeground(Color.WHITE);
 		Height_Label.setFont(new Font("Tahoma", Font.BOLD, 13));
-		panel_2_1.add(Height_Label);
+		panel_3.add(Height_Label);
 		
 		Height_TextField = new JTextField();
 		Height_TextField.setColumns(4);
-		panel_2_1.add(Height_TextField);
+		panel_3.add(Height_TextField);
 		
 		Nationality_TextField = new JTextField();
-		panel_2_1.add(Nationality_TextField);
+		panel_3.add(Nationality_TextField);
 		Nationality_TextField.setColumns(15);
-		
-		//	
+			
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(312, 76, 633, 294);
-		getContentPane().add(scrollPane);
+		scrollPane.setBounds(312, 76, 633, 364);
+		this.add(scrollPane);
 		
 		clubCombobox = new JComboBox();
 		clubCombobox.addItemListener(new ItemListener() {
-
 			public void itemStateChanged(ItemEvent e) {
 				Vector vector_Row = new Vector();
 				vector_Row = getvRow();
 				table.setModel(new DefaultTableModel(vector_Row, vector_Column));
-				scrollPane.setViewportView(table);	
-				
-				
+				scrollPane.setViewportView(table);					
 			}
 		});
+		
 		JLabel club_Label = new JLabel("");
-		club_Label.setBounds(42, 344, 258, 160);
-		clubCombobox.addActionListener(new ActionListener() {
-            
+		club_Label.setBounds(136, 335, 160, 160);
+		club_Label.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+		club_Label.setHorizontalAlignment(JLabel.CENTER);
+		club_Label.setVerticalAlignment(JLabel.CENTER);
+		clubCombobox.addActionListener(new ActionListener() {            
             public void actionPerformed(ActionEvent e) {
                 try {
                     // Xử lý sự kiện khi giá trị thay đổi
@@ -232,25 +227,24 @@ public class PlayerGUI_JFrame extends JFrame{
                         Icon icon = getIcon(selectedItem);                        
                         club_Label.setIcon(icon);
                     }
-                } catch (Exception ex) {
-                   
+                } catch (Exception ex) {                   
                     ex.printStackTrace();
                 }
             }
         });
-		getContentPane().add(club_Label);
+		this.add(club_Label);	
 		
+		JLabel ClubName_Label = new JLabel("Club Name:");
+		ClubName_Label.setForeground(Color.WHITE);
+		ClubName_Label.setFont(new Font("Tahoma", Font.BOLD, 14));
+		ClubName_Label.setBounds(342, 31, 100, 16);
+		this.add(ClubName_Label);
 		
 		clubCombobox.setModel(new DefaultComboBoxModel(new String[] {"Free Agents" , "Becamex Bình Dương" , "Công An Hà Nội" , "Đông Á Thanh Hóa" , "Hà Nội FC" , "Hải Phòng" , "LPBank Hoàng Anh Gia Lai" , "Hồng Lĩnh Hà Tĩnh" , "Khánh Hòa" , "Quảng Nam" , "MerryLand Quy Nhơn Bình Định" , "Sông Lam Nghệ An" , "Thép Xanh Nam Định" , "TP Hồ Chí Minh" , "Thể Công – Viettel" }));
 		clubCombobox.setBounds(440, 30, 222, 21);
-		getContentPane().add(clubCombobox);
-		//
+		this.add(clubCombobox);			
 		
-		
-		
-		
-				
-		
+		//------------Hiển thị bảng------------//
 		vector_Column = new Vector();                                                                            
 		vector_Column.add("Player ID");
 		vector_Column.add("Player Name");
@@ -259,9 +253,7 @@ public class PlayerGUI_JFrame extends JFrame{
 		vector_Column.add("Weight");
 		vector_Column.add("Height");
 		vector_Column.add("Age");
-		vector_Column.add("Nationality");
-		
-		
+		vector_Column.add("Nationality");		
 		
 		table = new JTable();
 		table.addMouseListener(new MouseAdapter() {
@@ -277,15 +269,13 @@ public class PlayerGUI_JFrame extends JFrame{
 				Age_TextField.setText(table.getValueAt(index, 6).toString());
 				Nationality_TextField.setText(table.getValueAt(index, 7).toString());				
 			}
-		});
-		
+		});			
 		
 		vector_Row = getvRow();
 		table.setModel(new DefaultTableModel(vector_Row, vector_Column));
 		scrollPane.setViewportView(table);
-		
-		
-		
+
+		//------------Cài đặt chức năng cho các nút------------//
 		JButton Insert_Button = new JButton("Insert");
 		Insert_Button.setBounds(342, 400, 85, 21);
 		panel.add(Insert_Button);
@@ -329,13 +319,11 @@ public class PlayerGUI_JFrame extends JFrame{
 				    JOptionPane.showMessageDialog(null, "Insert failed.");
 				}				
 			}
-		});
-		
+		});		
 		
 		JButton Update_Button = new JButton("Update");
 		Update_Button.setBounds(463, 400, 85, 21);
 		panel.add(Update_Button);		
-
 		
 		Update_Button.addActionListener(new ActionListener() {		
 			@Override
@@ -378,6 +366,7 @@ public class PlayerGUI_JFrame extends JFrame{
 				}				
 			}
 		});
+		
 		JButton Delete_Button = new JButton("Delete");
 		Delete_Button.setBounds(577, 400, 85, 21);
 		panel.add(Delete_Button);
@@ -440,32 +429,24 @@ public class PlayerGUI_JFrame extends JFrame{
 				    e2.printStackTrace();
 				    JOptionPane.showMessageDialog(null, "Clear failed.");
 				}				
-			}
-		});
+			} 
+		});		
 		
-		JLabel ClubName_Label = new JLabel("Club Name:");
-		ClubName_Label.setForeground(Color.WHITE);
-		ClubName_Label.setFont(new Font("Tahoma", Font.BOLD, 14));
-		ClubName_Label.setBounds(342, 31, 100, 16);
-		getContentPane().add(ClubName_Label);
-		
-		
-
-
-		
+		//------------------Background và cài đặt Frame---------------------//
 		JLabel Background = new JLabel("");
-		Background.setIcon(new ImageIcon(PlayerGUI_JFrame.class.getResource("/IMG/gg.png")));
+		Background.setIcon(new ImageIcon(PlayerGUI.class.getResource("/IMG/gg.png")));
 		Background.setBounds(0, 0, 1000, 505);
-
-		getContentPane().add(Background);		
-		//----------//
+		this.add(Background);
+		
+		this.setSize(1014,542);
+		this.setLayout(null);
 		this.setVisible(true);
-		//this.setResizable(false);
+		this.setResizable(false); //khoá thu phóng
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);		
 	}
 	public static void main(String[] args) {
-		new PlayerGUI_JFrame();
+		new PlayerGUI();
 	}
 }
 
