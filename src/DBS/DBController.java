@@ -31,7 +31,6 @@ public class DBController{
 			   String url = "jdbc:mysql://localhost/vleague";
 			   Class.forName ("com.mysql.cj.jdbc.Driver");
 			   conn = DriverManager.getConnection(url, userName, password);
-			   System.out.println("Connection thanh cong");
 			   
 		} catch(Exception e){
 

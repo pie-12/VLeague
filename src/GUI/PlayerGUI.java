@@ -69,6 +69,7 @@ public class PlayerGUI extends JFrame{
 		return res;				
 	}
 	
+	
 	public static String get_idClub_fromtextfield() {
 		String res = null;
 		Connection conn = new DBController().getConnection();
@@ -175,7 +176,7 @@ public class PlayerGUI extends JFrame{
 		getContentPane().add(Back_Button);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(18, 48, 120, 322);
+		panel_1.setBounds(10, 51, 120, 322);
 		getContentPane().add(panel_1);
 		panel_1.setLayout(new FlowLayout(FlowLayout.RIGHT, 7, 30));
 		panel_1.setOpaque(false); //trong suốt
@@ -348,6 +349,50 @@ public class PlayerGUI extends JFrame{
 		searchby_comBox.setSelectedIndex(-1);
 		panel_5.add(searchby_comBox);	
 		
+		
+		
+		
+		//------------Hiển thị bảng------------//
+		vector_Column = new Vector();                                                                            
+		vector_Column.add("Player ID");
+		vector_Column.add("Player Name");
+		vector_Column.add("Shirt Number");
+		vector_Column.add("Position");
+		vector_Column.add("Weight");
+		vector_Column.add("Height");
+		vector_Column.add("Age");
+		vector_Column.add("Nationality");		
+		
+		table = new JTable();
+		table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 11));	
+		//table.getTableHeader().setResizingAllowed(false);
+		table.getTableHeader().setReorderingAllowed(false);
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {	
+				int index = table.getSelectedRow();
+				ID_TextField.setText(table.getValueAt(index, 0).toString());
+				PlayerName_TextField.setText(table.getValueAt(index, 1).toString());
+				ShirtNumber_TextField.setText(table.getValueAt(index, 2).toString());
+				Position_comboBox.setSelectedItem(table.getValueAt(index, 3).toString());
+				Weight_TextField.setText(table.getValueAt(index, 4).toString());
+				Height_TextField.setText(table.getValueAt(index, 5).toString());
+				Age_TextField.setText(table.getValueAt(index, 6).toString());
+				Nationality_TextField.setText(table.getValueAt(index, 7).toString());
+				
+				String selectedItem = get_idClub_fromtextfield();
+                if (selectedItem != null) {
+                    Icon icon = getIcon(selectedItem);                        
+                    club_Label.setIcon(icon);
+                } 
+			}
+		});			
+		
+		vector_Row = getvRow();
+		table.setModel(new DefaultTableModel(vector_Row, vector_Column));
+		scrollPane.setViewportView(table);
+
+		//------------Cài đặt chức năng cho các nút------------//
 		JButton Search_Button = new JButton();
 		//Search_Button.setBackground(new Color(255, 255, 255));
 		ImageIcon Icon = new ImageIcon("src/IMG/search.png");
@@ -379,52 +424,6 @@ public class PlayerGUI extends JFrame{
 		});
 		panel_5.add(Search_Button);
 		
-		
-		
-		
-		//------------Hiển thị bảng------------//
-		vector_Column = new Vector();                                                                            
-		vector_Column.add("Player ID");
-		vector_Column.add("Player Name");
-		vector_Column.add("Shirt Number");
-		vector_Column.add("Position");
-		vector_Column.add("Weight");
-		vector_Column.add("Height");
-		vector_Column.add("Age");
-		vector_Column.add("Nationality");		
-		
-		table = new JTable();
-		table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 11));	
-		//table.getTableHeader().setResizingAllowed(false);
-		table.getTableHeader().setReorderingAllowed(false);
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-                
-				int index = table.getSelectedRow();
-				ID_TextField.setText(table.getValueAt(index, 0).toString());
-				PlayerName_TextField.setText(table.getValueAt(index, 1).toString());
-				ShirtNumber_TextField.setText(table.getValueAt(index, 2).toString());
-				Position_comboBox.setSelectedItem(table.getValueAt(index, 3).toString());
-				Weight_TextField.setText(table.getValueAt(index, 4).toString());
-				Height_TextField.setText(table.getValueAt(index, 5).toString());
-				Age_TextField.setText(table.getValueAt(index, 6).toString());
-				Nationality_TextField.setText(table.getValueAt(index, 7).toString());
-				
-				String selectedItem = get_idClub_fromtextfield();
-                if (selectedItem != null) {
-                    Icon icon = getIcon(selectedItem);                        
-                    club_Label.setIcon(icon);
-                } 
-			}
-		});			
-		
-		vector_Row = getvRow();
-		table.setModel(new DefaultTableModel(vector_Row, vector_Column));
-		scrollPane.setViewportView(table);
-
-		//------------Cài đặt chức năng cho các nút------------//
 		JButton Insert_Button = new JButton("Insert");		
 		Insert_Button.setBackground(new Color(255, 255, 255));
 		Insert_Button.setFocusable(false);
@@ -460,7 +459,7 @@ public class PlayerGUI extends JFrame{
 					
 				}
 				catch (java.lang.NumberFormatException e1) {
-					JOptionPane.showMessageDialog(null, "Please enter complete information.");
+					JOptionPane.showMessageDialog(null, "Please fill in all fields!");
 				}
 				catch (java.sql.SQLIntegrityConstraintViolationException e2) {
 					JOptionPane.showMessageDialog(null, "ID already taken, try another ID.");
