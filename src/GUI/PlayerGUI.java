@@ -408,7 +408,7 @@ public class PlayerGUI extends JFrame{
 					Vector vector_Row = new Vector();
 					vector_Row = getvRow_search();
 					
-					club_Label.setIcon(new ImageIcon(PlayerGUI.class.getResource("/IMG/FA.png")));
+					club_Label.setIcon(null);
 					
 					table.setModel(new DefaultTableModel(vector_Row, vector_Column));
 					scrollPane.setViewportView(table);							
@@ -577,7 +577,7 @@ public class PlayerGUI extends JFrame{
 					Nationality_TextField.setText("");					
 					Search_textField.setText("");
 					searchby_comBox.setSelectedIndex(-1);
-					club_Label.setIcon((new ImageIcon(PlayerGUI.class.getResource("/IMG/FA.png"))));
+					club_Label.setIcon(null);
 					
 					Vector vector_Row = new Vector();
 					vector_Row = getvRow();

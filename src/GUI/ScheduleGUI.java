@@ -17,6 +17,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
@@ -57,7 +58,7 @@ public class ScheduleGUI extends JFrame{
 	private Boolean use_duplicate_check = true; //true = insert/update, false = choose row
 	
 	public Icon getIcon(String link) {
-		int width = 120, height = 120;
+		int width = 115, height = 115;
 		Image image = new ImageIcon(getClass().getResource("/IMG/" + link + ".png")).getImage();
 		Icon icon = new ImageIcon(image.getScaledInstance(width, height, image.SCALE_SMOOTH));
 		return icon;
@@ -81,6 +82,7 @@ public class ScheduleGUI extends JFrame{
 		}
 		return res;				
 	}
+	
 	public static String get_idClub_from_team2_comboBox() {
 		String res = null;
 		Connection conn = new DBController().getConnection();
@@ -109,7 +111,7 @@ public class ScheduleGUI extends JFrame{
 			ResultSet resultSet = statement.executeQuery();
 			while(resultSet.next()) {
 				Vector vtemp = new Vector();
-				vtemp.add(resultSet.getInt("match_id"));
+				vtemp.add(resultSet.getString("match_id"));
 				vtemp.add(resultSet.getString("team1_name"));
 				vtemp.add(resultSet.getString("team2_name"));
 				vtemp.add(resultSet.getDate("match_date"));
@@ -153,15 +155,19 @@ public class ScheduleGUI extends JFrame{
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				use_duplicate_check = false;
-                int row = table.getSelectedRow();
-                matchID_textField.setText(table.getValueAt(row, 0).toString());
-                team1_comboBox.setSelectedItem(table.getValueAt(row, 1).toString());
-                team2_comboBox.setSelectedItem(table.getValueAt(row, 2).toString());
-                dateChooser.setDate((Date)table.getValueAt(row, 3));
-                spinner.setValue(table.getValueAt(row, 4));
-                stadium_comboBox.setSelectedItem(table.getValueAt(row, 5).toString()); 
-                use_duplicate_check = true;
+				try {
+					use_duplicate_check = false;
+	                int row = table.getSelectedRow();
+	                matchID_textField.setText(table.getValueAt(row, 0).toString());
+	                team1_comboBox.setSelectedItem(table.getValueAt(row, 1).toString());
+	                team2_comboBox.setSelectedItem(table.getValueAt(row, 2).toString());
+	                dateChooser.setDate((Date)table.getValueAt(row, 3));
+	                spinner.setValue(table.getValueAt(row, 4));
+	                stadium_comboBox.setSelectedItem(table.getValueAt(row, 5).toString()); 
+	                use_duplicate_check = true;
+				} catch (java.lang.ClassCastException e) {
+					// do nothing
+				}				
               }						
 		});	
 		scrollPane.setViewportView(table);
@@ -264,18 +270,77 @@ public class ScheduleGUI extends JFrame{
 		stadium_comboBox.setModel(new DefaultComboBoxModel(new String[] {"Bà Rịa", "Bến Tre", "Bình Phước", "Buôn Ma Thuột", "Cà Mau", "Cẩm Phả", "Cần Thơ", "Cao Lãnh", "Chi Lăng", "Gò Đậu", "Hà Nam", "Hà Tĩnh", "Hàng Đẫy", "Hoà Xuân", "Kon Tum", "Lạch Tray", "Lâm Viên", "Long An", "Mỹ Đình", "Ninh Bình", "Phan Thiết", "Phú Yên", "Pleiku", "Quân khu 7", "Quy Nhơn", "Rạch Giá", "Tam Kỳ", "Tây Ninh", "Thanh Hóa", "Thiên Trường", "Thống Nhất", "Tự Do", "Việt Trì", "Vinh", "Vĩnh Long", "Đồng Nai"}));
 		stadium_comboBox.setSelectedIndex(-1);
 		getContentPane().add(stadium_comboBox);
+
+		JLabel team1_img_Label = new JLabel("");
+		team1_img_Label.setBounds(10, 350, 125, 125);
+		team1_img_Label.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+		team1_img_Label.setHorizontalAlignment(JLabel.CENTER);
+		team1_img_Label.setVerticalAlignment(JLabel.CENTER);
+		team1_comboBox.addActionListener(new ActionListener() {            
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // Xử lý sự kiện khi giá trị thay đổi
+                    String selectedItem = (String)get_idClub_from_team1_comboBox();
+                    if (selectedItem != null) {
+                        Icon icon = getIcon(selectedItem);                        
+                        team1_img_Label.setIcon(icon);
+                    }
+                } catch (Exception ex) {                   
+                    ex.printStackTrace();
+                }
+            }
+        });
+		getContentPane().add(team1_img_Label);
+		JPanel panel_team1 = new JPanel();
+		panel_team1.setBackground(new Color(255, 255, 255, 100));
+		panel_team1.setBounds(10, 350, 125, 125);
+		getContentPane().add(panel_team1);
 		
-		JPanel panel = new JPanel();
-		panel.setOpaque(false);
-		panel.setBounds(194, 450, 772, 37);
-		getContentPane().add(panel);
-		panel.setLayout(new FlowLayout(FlowLayout.LEFT, 118, 0));
+		JLabel team2_img_Label = new JLabel("");
+		team2_img_Label.setBounds(172, 350, 125, 125);
+		team2_img_Label.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+		team2_img_Label.setHorizontalAlignment(JLabel.CENTER);
+		team2_img_Label.setVerticalAlignment(JLabel.CENTER);
+		team2_comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					// Xử lý sự kiện khi giá trị thay đổi
+					String selectedItem = (String) get_idClub_from_team2_comboBox();
+					if (selectedItem != null) {
+						Icon icon = getIcon(selectedItem);
+						team2_img_Label.setIcon(icon);
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+		getContentPane().add(team2_img_Label);
+		JPanel panel_team2 = new JPanel();
+		panel_team2.setBackground(new Color(255, 255, 255, 100));
+		panel_team2.setBounds(172, 350, 125, 125);
+		getContentPane().add(panel_team2);
+		
+		JLabel versus_Label = new JLabel("");
+		versus_Label.setFont(new Font("Tahoma", Font.BOLD, 16));
+		versus_Label.setForeground(new Color(255, 255, 255));
+		versus_Label.setVerticalAlignment(SwingConstants.CENTER);
+		versus_Label.setHorizontalAlignment(SwingConstants.CENTER);
+		versus_Label.setText("VS");
+		versus_Label.setBounds(91, 350, 125, 125);
+		getContentPane().add(versus_Label);
 		
 		//-----------------Button-----------------//
+		JPanel button_panel = new JPanel();
+		button_panel.setOpaque(false);
+		button_panel.setBounds(194, 450, 772, 37);
+		getContentPane().add(button_panel);
+		button_panel.setLayout(new FlowLayout(FlowLayout.LEFT, 118, 0));
+		
 		JButton Insert_Button = new JButton("Insert");
 		Insert_Button.setFocusable(false);
 		Insert_Button.setBackground(Color.WHITE);
-		panel.add(Insert_Button);
+		button_panel.add(Insert_Button);
 		
 		Insert_Button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -287,7 +352,7 @@ public class ScheduleGUI extends JFrame{
                     String sql = "INSERT INTO schedule (match_id, match_date, match_time, team1_name, team2_name, stadium_name) VALUES (?, ?, ?, ?, ?, ?)";
                     try {
                         PreparedStatement statement = conn.prepareStatement(sql);
-                        statement.setInt(1, Integer.parseInt(matchID_textField.getText()));
+                        statement.setString(1, matchID_textField.getText());
                         statement.setDate(2, new java.sql.Date(dateChooser.getDate().getTime()));
                         statement.setTime(3, new java.sql.Time(((Date)spinner.getValue()).getTime()));
                         statement.setString(4, team1_comboBox.getSelectedItem().toString());
@@ -301,6 +366,7 @@ public class ScheduleGUI extends JFrame{
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
                     }
+
                     matchID_textField.setText("");
                     team1_comboBox.setSelectedIndex(-1);
                     team2_comboBox.setSelectedIndex(-1);
@@ -320,17 +386,87 @@ public class ScheduleGUI extends JFrame{
 		JButton Update_Button = new JButton("Update");
 		Update_Button.setFocusable(false);
 		Update_Button.setBackground(Color.WHITE);
-		panel.add(Update_Button);
+		button_panel.add(Update_Button);
+		
+		Update_Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					try {
+						Connection conn = new DBController().getConnection();
+						DefaultTableModel model = (DefaultTableModel)table.getModel();
+						int index_row = table.getSelectedRow();
+						String ID_value = model.getValueAt(index_row, 0).toString();
+						String sql = "UPDATE schedule SET match_id = ?, match_date = ?, match_time = ?, team1_name = ?, team2_name = ?, stadium_name = ? WHERE match_id = ?";
+						PreparedStatement statement = conn.prepareStatement(sql);
+						
+						statement.setString(1, matchID_textField.getText());
+						statement.setDate(2, new java.sql.Date(dateChooser.getDate().getTime()));
+						statement.setTime(3, new java.sql.Time(((Date)spinner.getValue()).getTime()));
+						statement.setString(4, team1_comboBox.getSelectedItem().toString());
+						statement.setString(5, team2_comboBox.getSelectedItem().toString());
+						statement.setString(6, stadium_comboBox.getSelectedItem().toString());
+						statement.setString(7, ID_value);
+						statement.execute();
+						
+						JOptionPane.showMessageDialog(null, "Update successfully!");
+						Vector vector_Row = new Vector();
+						vector_Row = getvRow();
+						table.setModel(new DefaultTableModel(vector_Row, vector_Column));
+						scrollPane.setViewportView(table);	
+					} 
+					catch (java.lang.ArrayIndexOutOfBoundsException e1) {
+						JOptionPane.showMessageDialog(null, "No row selected.");
+					}
+					catch (SQLIntegrityConstraintViolationException e2) {
+						JOptionPane.showMessageDialog(null, "ID already taken, try another ID.");
+					}
+					catch (Exception e3) {
+					    e3.printStackTrace();
+					    JOptionPane.showMessageDialog(null, "Update failed.");
+				}
+			}
+		});
 		
 		JButton Delete_Button = new JButton("Delete");
 		Delete_Button.setFocusable(false);
 		Delete_Button.setBackground(Color.WHITE);
-		panel.add(Delete_Button);
+		button_panel.add(Delete_Button);
+		
+		Delete_Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Vector vtemp;
+				vtemp = getvRow();
+				int index_row = table.getSelectedRow();
+				int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this match?" , "Delete Confirm" , JOptionPane.YES_NO_CANCEL_OPTION);
+				if(confirm == 0) {
+					try {
+						Connection conn = new DBController().getConnection();
+						String match_id = ((Vector)vtemp.get(index_row)).get(0) + "";
+						String sql = "DELETE FROM schedule WHERE match_id = ?";
+						PreparedStatement statement = conn.prepareStatement(sql);
+						statement.setString(1, match_id);
+						statement.execute();
+						
+						JOptionPane.showMessageDialog(null, "Deleted successfully.");
+						Vector vector_Row = new Vector();
+						vector_Row = getvRow();
+						table.setModel(new DefaultTableModel(vector_Row, vector_Column));
+						scrollPane.setViewportView(table);
+					}
+					catch (java.lang.ArrayIndexOutOfBoundsException e1) {
+						JOptionPane.showMessageDialog(null, "No row selected.");
+					}
+					catch (SQLException e2) {
+						e2.printStackTrace();
+						JOptionPane.showMessageDialog(null, "Delete failed.");
+					}
+				}
+			}
+		});		
 		
 		JButton Clear_Button = new JButton("Clear");
 		Clear_Button.setFocusable(false);
 		Clear_Button.setBackground(Color.WHITE);
-		panel.add(Clear_Button);
+		button_panel.add(Clear_Button);
 		
 		Clear_Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -339,6 +475,8 @@ public class ScheduleGUI extends JFrame{
 				team2_comboBox.setSelectedIndex(-1);
 				stadium_comboBox.setSelectedIndex(-1);
 				dateChooser.setDate(new Date());
+				team1_img_Label.setIcon(null);
+				team2_img_Label.setIcon(null);
 				try {
 					SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 					Date twelveOClock = sdf.parse("12:00:00");
@@ -349,17 +487,8 @@ public class ScheduleGUI extends JFrame{
 			}
 		});
 		
-		JPanel panel_4 = new JPanel();
-		panel_4.setBackground(new Color(255, 255, 255, 100));
-		panel_4.setBounds(10, 350, 125, 125);
-		getContentPane().add(panel_4);
 		
-		JPanel panel_4_1 = new JPanel();
-		panel_4_1.setBackground(new Color(255, 255, 255, 100));
-		panel_4_1.setBounds(170, 350, 125, 125);
-		getContentPane().add(panel_4_1);
-		
-		//---------------------------------------//
+		//-------------------Set Background-------------------//
 		
 		JLabel Background = new JLabel("");
 		Background.setIcon(new ImageIcon(PlayerGUI.class.getResource("/IMG/gg.png")));
