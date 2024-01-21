@@ -303,6 +303,7 @@ public class PlayerGUI extends JFrame{
                 }
             }
         });
+       
 		getContentPane().add(club_Label);	
 		JPanel panel_4 = new JPanel();
 		panel_4.setBounds(136, 335, 160, 160);

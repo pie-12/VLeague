@@ -34,6 +34,7 @@ import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.html.ImageView;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 
@@ -48,14 +49,16 @@ import javax.swing.SwingConstants;
 
 
 public class ResultGUI extends JFrame{
-	private JTextField matchID_textField;
-	private static TextField team1_textField;
-    private static TextField team2_textField;
+	private static JTextField matchID_textField;
+	private static JTextField team1_textField;
+    private static JTextField team2_textField;
 	private JTable table;
 	private Vector vector_Row, vector_Column;	
 	private Boolean use_duplicate_check = true; //true = insert/update, false = choose row
 	private JTextField score_1_textField;
 	private JTextField score_2_textField;
+	private JLabel team1_img_Label;
+    private JLabel team2_img_Label;
 	
 	public Icon getIcon(String link) {
 		int width = 115, height = 115;
@@ -64,6 +67,43 @@ public class ResultGUI extends JFrame{
 		return icon;
 	}
 
+
+	public static String get_score_team1() {
+		String res = null;
+		Connection conn = new DBController().getConnection();
+		String sql = "SELECT * FROM schedule WHERE match_id = ?";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, matchID_textField.getText());
+			ResultSet resultSet = statement.executeQuery();
+			if (resultSet.next())
+				res = resultSet.getString("score_1");
+		} catch (java.lang.NullPointerException e1) {
+			// feature
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
+			
+	public static String get_score_team2() {
+		String res = null;
+		Connection conn = new DBController().getConnection();
+		String sql = "SELECT * FROM schedule WHERE match_id = ?";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, matchID_textField.getText());
+			ResultSet resultSet = statement.executeQuery();
+			if (resultSet.next())
+				res = resultSet.getString("score_2");
+		} catch (java.lang.NullPointerException e1) {
+			// feature
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
+	
 	public static String get_idClub_from_team1_textField() {
 		String res = null;
 		Connection conn = new DBController().getConnection();
@@ -82,6 +122,8 @@ public class ResultGUI extends JFrame{
 		}
 		return res;				
 	}
+
+
 	
 	public static String get_idClub_from_team2_textField() {
 		String res = null;
@@ -113,7 +155,7 @@ public class ResultGUI extends JFrame{
 				Vector vtemp = new Vector();
 				vtemp.add(resultSet.getString("match_id"));
 				vtemp.add(resultSet.getString("team1_name"));
-				if(resultSet.getString("score_1") == null || resultSet.getString("score_2") == null)
+				if(resultSet.getString("score_1") == null || resultSet.getString("score_2") == null || resultSet.getString("score_1").equals("") || resultSet.getString("score_2").equals("") || resultSet.getString("score_1").equals("") || resultSet.getString("score_2").equals(""))
 					vtemp.add("? - ?");
 				else
 					vtemp.add(resultSet.getString("score_1") + " - " + resultSet.getString("score_2"));
@@ -121,6 +163,7 @@ public class ResultGUI extends JFrame{
 				vtemp.add(resultSet.getDate("match_date"));
 				vtemp.add(resultSet.getTime("match_time"));
 				vtemp.add(resultSet.getString("stadium_name"));
+				
 				vD.add(vtemp);				
 			}
 			}
@@ -142,6 +185,30 @@ public class ResultGUI extends JFrame{
 		scrollPane.setBounds(312, 76, 633, 364);
 		getContentPane().add(scrollPane);
 		
+		JLabel team1_img_Label = new JLabel("");
+		team1_img_Label.setBounds(20, 314, 125, 125);
+		team1_img_Label.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+		team1_img_Label.setHorizontalAlignment(JLabel.CENTER);
+		team1_img_Label.setVerticalAlignment(JLabel.CENTER);
+
+		getContentPane().add(team1_img_Label);
+		JPanel panel_team1 = new JPanel();
+		panel_team1.setBackground(new Color(255, 255, 255, 100));
+		panel_team1.setBounds(20, 314, 125, 125);
+		getContentPane().add(panel_team1);
+		
+		JLabel team2_img_Label = new JLabel("");
+		team2_img_Label.setBounds(177, 314, 125, 125);
+		team2_img_Label.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+		team2_img_Label.setHorizontalAlignment(JLabel.CENTER);
+		team2_img_Label.setVerticalAlignment(JLabel.CENTER);
+
+		getContentPane().add(team2_img_Label);
+		JPanel panel_team2 = new JPanel();
+		panel_team2.setBackground(new Color(255, 255, 255, 100));
+		panel_team2.setBounds(177, 314, 125, 125);
+		getContentPane().add(panel_team2);
+		
 		//------------Hiển thị bảng------------//
 		vector_Column = new Vector();                                                                            
 		vector_Column.add("Match ID");
@@ -161,16 +228,31 @@ public class ResultGUI extends JFrame{
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				try {
-					use_duplicate_check = false;
 	                int row = table.getSelectedRow();
 	                matchID_textField.setText(table.getValueAt(row, 0).toString());
 	                team1_textField.setText(table.getValueAt(row, 1).toString());
 	                team2_textField.setText(table.getValueAt(row, 3).toString());
+	                
+	                String selectedItem = get_idClub_from_team1_textField();
+	                if (selectedItem != null) {
+	                    Icon icon = getIcon(selectedItem);                        
+	                    team1_img_Label.setIcon(icon);
+	                } 
+	                selectedItem = get_idClub_from_team2_textField();
+	                if (selectedItem != null) {
+	                    Icon icon = getIcon(selectedItem);                        
+	                    team2_img_Label.setIcon(icon);
+	                }
+	                
+	                score_1_textField.setText(get_score_team1());
+	                score_2_textField.setText(get_score_team2());
+	                
 				} catch (java.lang.ClassCastException e) {
 					// do nothing
 				}				
-              }						
+              }				
 		});	
+		
 		scrollPane.setViewportView(table);
 		
 		JPanel panel_1 = new JPanel();
@@ -199,69 +281,16 @@ public class ResultGUI extends JFrame{
 		matchID_textField.setEditable(false);
 		getContentPane().add(matchID_textField);
 		
-		team1_textField = new TextField();
+		team1_textField = new JTextField();
 		team1_textField.setBounds(148, 123, 144, 21);
 		team1_textField.setEditable(false);
 		getContentPane().add(team1_textField);
 		
 		
-		team2_textField = new TextField();
+		team2_textField = new JTextField();
 		team2_textField.setBounds(148, 169, 144, 21);
 		team2_textField.setEditable(false);
 		getContentPane().add(team2_textField);
-		
-		
-		
-
-		JLabel team1_img_Label = new JLabel("");
-		team1_img_Label.setBounds(10, 350, 125, 125);
-		team1_img_Label.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
-		team1_img_Label.setHorizontalAlignment(JLabel.CENTER);
-		team1_img_Label.setVerticalAlignment(JLabel.CENTER);
-		team1_textField.addActionListener(new ActionListener() {            
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    // Xử lý sự kiện khi giá trị thay đổi
-                    String selectedItem = (String)get_idClub_from_team1_textField();
-                    if (selectedItem != null) {
-                        Icon icon = getIcon(selectedItem);                        
-                        team1_img_Label.setIcon(icon);
-                    }
-                } catch (Exception ex) {                   
-                    ex.printStackTrace();
-                }
-            }
-        });
-		getContentPane().add(team1_img_Label);
-		JPanel panel_team1 = new JPanel();
-		panel_team1.setBackground(new Color(255, 255, 255, 100));
-		panel_team1.setBounds(10, 350, 125, 125);
-		getContentPane().add(panel_team1);
-		
-		JLabel team2_img_Label = new JLabel("");
-		team2_img_Label.setBounds(172, 350, 125, 125);
-		team2_img_Label.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
-		team2_img_Label.setHorizontalAlignment(JLabel.CENTER);
-		team2_img_Label.setVerticalAlignment(JLabel.CENTER);
-		team2_textField.addActionListener(new ActionListener() {            
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    // Xử lý sự kiện khi giá trị thay đổi
-                    String selectedItem = (String)get_idClub_from_team2_textField();
-                    if (selectedItem != null) {
-                        Icon icon = getIcon(selectedItem);                        
-                        team1_img_Label.setIcon(icon);
-                    }
-                } catch (Exception ex) {                   
-                    ex.printStackTrace();
-                }
-            }
-        });
-		getContentPane().add(team2_img_Label);
-		JPanel panel_team2 = new JPanel();
-		panel_team2.setBackground(new Color(255, 255, 255, 100));
-		panel_team2.setBounds(172, 350, 125, 125);
-		getContentPane().add(panel_team2);
 		
 		JLabel versus_Label = new JLabel("");
 		versus_Label.setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -269,20 +298,29 @@ public class ResultGUI extends JFrame{
 		versus_Label.setVerticalAlignment(SwingConstants.CENTER);
 		versus_Label.setHorizontalAlignment(SwingConstants.CENTER);
 		versus_Label.setText("VS");
-		versus_Label.setBounds(91, 350, 125, 125);
+		versus_Label.setBounds(100, 315, 125, 125);
 		getContentPane().add(versus_Label);
 		
+		score_1_textField = new JTextField();
+		score_1_textField.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		score_1_textField.setBounds(60, 267, 40, 40);
+		score_1_textField.setHorizontalAlignment(JTextField.CENTER);
+		getContentPane().add(score_1_textField);
+				
+		score_2_textField = new JTextField();
+		score_2_textField.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		score_2_textField.setColumns(10);
+		score_2_textField.setBounds(218, 267, 40, 40);
+		score_2_textField.setHorizontalAlignment(JTextField.CENTER);
+		getContentPane().add(score_2_textField);
+		
 		//-----------------Button-----------------//
-		JPanel button_panel = new JPanel();
-		button_panel.setOpaque(false);
-		button_panel.setBounds(10, 312, 292, 37);
-		getContentPane().add(button_panel);
-		button_panel.setLayout(new FlowLayout(FlowLayout.LEFT, 118, 0));
 		
 		JButton Update_Button = new JButton("Update");
 		Update_Button.setFocusable(false);
 		Update_Button.setBackground(Color.WHITE);
-		button_panel.add(Update_Button);
+		Update_Button.setBounds(121, 276, 75, 29);
+		getContentPane().add(Update_Button);
 		
 		Update_Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -313,17 +351,12 @@ public class ResultGUI extends JFrame{
 			}
 		});
 		
-		score_1_textField = new JTextField();
-		score_1_textField.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		score_1_textField.setBounds(53, 300, 40, 40);
-		getContentPane().add(score_1_textField);
-		score_1_textField.setColumns(10);
-		
-		score_2_textField = new JTextField();
-		score_2_textField.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		score_2_textField.setColumns(10);
-		score_2_textField.setBounds(216, 300, 40, 40);
-		getContentPane().add(score_2_textField);
+		JLabel lblNewLabel = new JLabel("Result");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setForeground(new Color(255, 255, 255));
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 25));
+		lblNewLabel.setBounds(20, 232, 282, 52);
+		getContentPane().add(lblNewLabel);
 		
 		
 		//-------------------Set Background-------------------//
