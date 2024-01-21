@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 import DBS.DBController;
@@ -47,8 +48,7 @@ public class PlayerGUI extends JFrame{
 	private Vector vector_Row, vector_Column;
 	private static JTextField Search_textField;
 	
-	public Icon getIcon(String link) {
-		int width = 150, height = 150;
+	public Icon getIcon(int width, int height, String link) {
 		Image image = new ImageIcon(getClass().getResource("/IMG/" + link + ".png")).getImage();
 		Icon icon = new ImageIcon(image.getScaledInstance(width, height, image.SCALE_SMOOTH));
 		return icon;
@@ -169,12 +169,7 @@ public class PlayerGUI extends JFrame{
 		panel.setLayout(new FlowLayout(FlowLayout.LEFT, 118, 0));
 		getContentPane().add(panel);
 		panel.setOpaque(false);
-		
-		JButton Back_Button = new JButton("Back");
-		Back_Button.setFont(new Font("Tahoma", Font.BOLD, 10));
-		Back_Button.setBounds(0, 0, 65, 21);
-		getContentPane().add(Back_Button);
-		
+				
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(10, 51, 120, 322);
 		getContentPane().add(panel_1);
@@ -295,7 +290,7 @@ public class PlayerGUI extends JFrame{
                     // Xử lý sự kiện khi giá trị thay đổi
                     String selectedItem = (String) get_idClub();
                     if (selectedItem != null) {
-                        Icon icon = getIcon(selectedItem);                        
+                        Icon icon = getIcon(150, 150, selectedItem);                        
                         club_Label.setIcon(icon);
                     }
                 } catch (Exception ex) {                   
@@ -383,7 +378,7 @@ public class PlayerGUI extends JFrame{
 				
 				String selectedItem = get_idClub_fromtextfield();
                 if (selectedItem != null) {
-                    Icon icon = getIcon(selectedItem);                        
+                    Icon icon = getIcon(150, 150, selectedItem);                        
                     club_Label.setIcon(icon);
                 } 
 			}
@@ -594,6 +589,32 @@ public class PlayerGUI extends JFrame{
 			} 
 		});		
 		
+		JPanel back_panel = new JPanel();
+		back_panel.setBounds(0, 0, 40, 40);
+		getContentPane().add(back_panel);
+		back_panel.setBackground(Color.black);
+		back_panel.setLayout(null);
+		JLabel back_icon = new JLabel("");
+		back_icon.setHorizontalAlignment(SwingConstants.CENTER);
+		back_icon.setVerticalAlignment(SwingConstants.CENTER);
+		back_icon.setBounds(0, 0, 38, 38);
+		back_icon.setIcon(getIcon(38,38,"left-arrow"));
+		back_panel.add(back_icon);
+		
+		back_panel.addMouseListener(new java.awt.event.MouseAdapter() {
+			public void mouseClicked(java.awt.event.MouseEvent evt) {
+				new MainGUI();
+				setVisible(false);
+			}
+
+			public void mouseEntered(java.awt.event.MouseEvent evt) {
+				back_panel.setBackground(Color.lightGray);
+			}
+
+			public void mouseExited(java.awt.event.MouseEvent evt) {
+				back_panel.setBackground(Color.black);
+			}
+		});
 		
 		//------------------Background và cài đặt Frame---------------------//
 		JLabel Background = new JLabel("");
@@ -603,7 +624,9 @@ public class PlayerGUI extends JFrame{
 		
 		this.setSize(1014,542);
 		getContentPane().setLayout(null);
-		
+		ImageIcon logo = new ImageIcon(getClass().getResource("/IMG/football.png"));
+		this.setIconImage(logo.getImage());
+		this.setTitle("Player Management");	
 		JLabel label = new JLabel("New label");
 		label.setBounds(283, 10, 665, 58);
 		getContentPane().add(label);

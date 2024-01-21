@@ -57,8 +57,7 @@ public class ScheduleGUI extends JFrame{
 	private Vector vector_Row, vector_Column;	
 	private Boolean use_duplicate_check = true; //true = insert/update, false = choose row
 	
-	public Icon getIcon(String link) {
-		int width = 115, height = 115;
+	public Icon getIcon(int width, int height, String link) {
 		Image image = new ImageIcon(getClass().getResource("/IMG/" + link + ".png")).getImage();
 		Icon icon = new ImageIcon(image.getScaledInstance(width, height, image.SCALE_SMOOTH));
 		return icon;
@@ -282,7 +281,7 @@ public class ScheduleGUI extends JFrame{
                     // Xử lý sự kiện khi giá trị thay đổi
                     String selectedItem = (String)get_idClub_from_team1_comboBox();
                     if (selectedItem != null) {
-                        Icon icon = getIcon(selectedItem);                        
+                        Icon icon = getIcon(115, 115, selectedItem);                        
                         team1_img_Label.setIcon(icon);
                     }
                 } catch (Exception ex) {                   
@@ -307,7 +306,7 @@ public class ScheduleGUI extends JFrame{
 					// Xử lý sự kiện khi giá trị thay đổi
 					String selectedItem = (String) get_idClub_from_team2_comboBox();
 					if (selectedItem != null) {
-						Icon icon = getIcon(selectedItem);
+                        Icon icon = getIcon(115, 115, selectedItem);                        
 						team2_img_Label.setIcon(icon);
 					}
 				} catch (Exception ex) {
@@ -329,6 +328,13 @@ public class ScheduleGUI extends JFrame{
 		versus_Label.setText("VS");
 		versus_Label.setBounds(91, 350, 125, 125);
 		getContentPane().add(versus_Label);
+		
+		JLabel schedule_label = new JLabel("SCHEDULE");
+		schedule_label.setFont(new Font("Tahoma", Font.BOLD, 30));
+		schedule_label.setForeground(new Color(255, 255, 255));
+		schedule_label.setHorizontalAlignment(SwingConstants.CENTER);
+		schedule_label.setBounds(312, 10, 623, 44);
+		getContentPane().add(schedule_label);
 		
 		//-----------------Button-----------------//
 		JPanel button_panel = new JPanel();
@@ -487,6 +493,32 @@ public class ScheduleGUI extends JFrame{
 			}
 		});
 		
+		JPanel back_panel = new JPanel();
+		back_panel.setBounds(0, 0, 40, 40);
+		getContentPane().add(back_panel);
+		back_panel.setBackground(Color.black);
+		back_panel.setLayout(null);
+		JLabel back_icon = new JLabel("");
+		back_icon.setHorizontalAlignment(SwingConstants.CENTER);
+		back_icon.setVerticalAlignment(SwingConstants.CENTER);
+		back_icon.setBounds(0, 0, 38, 38);
+		back_icon.setIcon(getIcon(38,38,"left-arrow"));
+		back_panel.add(back_icon);
+		
+		back_panel.addMouseListener(new java.awt.event.MouseAdapter() {
+			public void mouseClicked(java.awt.event.MouseEvent evt) {
+				new MainGUI();
+				setVisible(false);
+			}
+
+			public void mouseEntered(java.awt.event.MouseEvent evt) {
+				back_panel.setBackground(Color.lightGray);
+			}
+
+			public void mouseExited(java.awt.event.MouseEvent evt) {
+				back_panel.setBackground(Color.black);
+			}
+		});
 		
 		//-------------------Set Background-------------------//
 		
@@ -494,6 +526,9 @@ public class ScheduleGUI extends JFrame{
 		Background.setIcon(new ImageIcon(PlayerGUI.class.getResource("/IMG/gg.png")));
 		Background.setBounds(0, 0, 1000, 505);
 		getContentPane().add(Background);
+		ImageIcon logo = new ImageIcon(getClass().getResource("/IMG/football.png"));
+		this.setIconImage(logo.getImage());
+		this.setTitle("Schedule Management");
 		this.setVisible(true);
 		this.setResizable(false); // khoá thu phóng
 		this.setLocationRelativeTo(null);

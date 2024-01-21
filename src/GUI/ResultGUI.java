@@ -60,8 +60,7 @@ public class ResultGUI extends JFrame{
 	private JLabel team1_img_Label;
     private JLabel team2_img_Label;
 	
-	public Icon getIcon(String link) {
-		int width = 115, height = 115;
+	public Icon getIcon(int width, int height, String link) {
 		Image image = new ImageIcon(getClass().getResource("/IMG/" + link + ".png")).getImage();
 		Icon icon = new ImageIcon(image.getScaledInstance(width, height, image.SCALE_SMOOTH));
 		return icon;
@@ -235,12 +234,12 @@ public class ResultGUI extends JFrame{
 	                
 	                String selectedItem = get_idClub_from_team1_textField();
 	                if (selectedItem != null) {
-	                    Icon icon = getIcon(selectedItem);                        
+	                    Icon icon = getIcon(115 , 115, selectedItem);                        
 	                    team1_img_Label.setIcon(icon);
 	                } 
 	                selectedItem = get_idClub_from_team2_textField();
 	                if (selectedItem != null) {
-	                    Icon icon = getIcon(selectedItem);                        
+	                    Icon icon = getIcon(115, 115, selectedItem);                        
 	                    team2_img_Label.setIcon(icon);
 	                }
 	                
@@ -314,6 +313,13 @@ public class ResultGUI extends JFrame{
 		score_2_textField.setHorizontalAlignment(JTextField.CENTER);
 		getContentPane().add(score_2_textField);
 		
+		JLabel lblNewLabel = new JLabel("Result");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setForeground(new Color(255, 255, 255));
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 23));
+		lblNewLabel.setBounds(20, 232, 282, 52);
+		getContentPane().add(lblNewLabel);
+		
 		//-----------------Button-----------------//
 		
 		JButton Update_Button = new JButton("Update");
@@ -351,13 +357,32 @@ public class ResultGUI extends JFrame{
 			}
 		});
 		
-		JLabel lblNewLabel = new JLabel("Result");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setForeground(new Color(255, 255, 255));
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 25));
-		lblNewLabel.setBounds(20, 232, 282, 52);
-		getContentPane().add(lblNewLabel);
+		JPanel back_panel = new JPanel();
+		back_panel.setBounds(0, 0, 40, 40);
+		getContentPane().add(back_panel);
+		back_panel.setBackground(Color.black);
+		back_panel.setLayout(null);
+		JLabel back_icon = new JLabel("");
+		back_icon.setHorizontalAlignment(SwingConstants.CENTER);
+		back_icon.setVerticalAlignment(SwingConstants.CENTER);
+		back_icon.setBounds(0, 0, 38, 38);
+		back_icon.setIcon(getIcon(38,38,"left-arrow"));
+		back_panel.add(back_icon);
 		
+		back_panel.addMouseListener(new java.awt.event.MouseAdapter() {
+			public void mouseClicked(java.awt.event.MouseEvent evt) {
+				new MainGUI();
+				setVisible(false);
+			}
+
+			public void mouseEntered(java.awt.event.MouseEvent evt) {
+				back_panel.setBackground(Color.lightGray);
+			}
+
+			public void mouseExited(java.awt.event.MouseEvent evt) {
+				back_panel.setBackground(Color.black);
+			}
+		});
 		
 		//-------------------Set Background-------------------//
 		
@@ -365,6 +390,9 @@ public class ResultGUI extends JFrame{
 		Background.setIcon(new ImageIcon(PlayerGUI.class.getResource("/IMG/gg.png")));
 		Background.setBounds(0, 0, 1000, 505);
 		getContentPane().add(Background);
+		ImageIcon logo = new ImageIcon(getClass().getResource("/IMG/football.png"));
+		this.setIconImage(logo.getImage());
+		this.setTitle("Result Management");	
 		this.setVisible(true);
 		this.setResizable(false); // khoá thu phóng
 		this.setLocationRelativeTo(null);
