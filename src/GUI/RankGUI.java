@@ -60,7 +60,6 @@ public class RankGUI extends JFrame{
 		Icon icon = new ImageIcon(image.getScaledInstance(width, height, image.SCALE_SMOOTH));
 		return icon;
 	}
-
 	
 	public String get_idClub_from_nameclub(String nameclub) {
 		Connection conn = new DBController().getConnection();

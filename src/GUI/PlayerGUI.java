@@ -68,8 +68,7 @@ public class PlayerGUI extends JFrame{
 		}
 		return res;				
 	}
-	
-	
+		
 	public static String get_idClub_fromtextfield() {
 		String res = null;
 		Connection conn = new DBController().getConnection();
