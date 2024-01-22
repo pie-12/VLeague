@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -60,6 +61,7 @@ public class MainGUI extends JFrame {
 		player_menu.setPreferredSize(new Dimension(170, 170));
 		menu_panel.add(player_menu);
 		player_menu.setLayout(null);
+		player_menu.setBorder(new LineBorder(new Color(69,159,226), 3));
 		
 		JLabel player_icon = new JLabel("");
 		player_icon.setHorizontalAlignment(SwingConstants.CENTER);
@@ -93,6 +95,7 @@ public class MainGUI extends JFrame {
 		schedule_menu.setPreferredSize(new Dimension(170, 170));
 		menu_panel.add(schedule_menu);
 		schedule_menu.setLayout(null);
+		schedule_menu.setBorder(new LineBorder(new Color(69,159,226), 3));
 		
 		JLabel schedule_icon = new JLabel("");
 		schedule_icon.setHorizontalAlignment(SwingConstants.CENTER);
@@ -127,6 +130,7 @@ public class MainGUI extends JFrame {
 		result_menu.setPreferredSize(new Dimension(170, 170));
 		menu_panel.add(result_menu);
 		result_menu.setLayout(null);
+		result_menu.setBorder(new LineBorder(new Color(69,159,226), 3));
 		
 		JLabel result_label = new JLabel("Result");
 		result_label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -161,6 +165,7 @@ public class MainGUI extends JFrame {
 		ranking_menu.setPreferredSize(new Dimension(170, 170));
 		menu_panel.add(ranking_menu);
 		ranking_menu.setLayout(null);
+		ranking_menu.setBorder(new LineBorder(new Color(69,159,226), 3));
 		
 		JLabel rank_label = new JLabel("Rank");
 		rank_label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -195,6 +200,7 @@ public class MainGUI extends JFrame {
 		logout_menu.setPreferredSize(new Dimension(170, 170));
 		menu_panel.add(logout_menu);
 		logout_menu.setLayout(null);
+		logout_menu.setBorder(new LineBorder(new Color(69,159,226), 3));
 		
 		JLabel logout_label = new JLabel("Log Out");
 		logout_label.setHorizontalAlignment(SwingConstants.CENTER);
