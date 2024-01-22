@@ -1,4 +1,4 @@
-package GUI;
+package LOG;
 
 import java.awt.EventQueue;
 
@@ -26,6 +26,7 @@ import java.awt.Font;
 import javax.swing.border.LineBorder;
 
 import DBS.DBController;
+import managerGUI.MainGUI;
 
 import javax.swing.JButton;
 
@@ -58,11 +59,6 @@ public class LoginGUI extends JFrame {
 		line_2.setBounds(0, 0, 500, 300);
 		//loginPanel.add(line_2);
 		line_2.setBorder(new LineBorder(new Color(0, 0, 0), 2));
-		
-		JLabel fix_vnhpl = new JLabel("");
-		fix_vnhpl.setBounds(368, 179, 25, 25);
-		loginPanel.add(fix_vnhpl);
-		fix_vnhpl.setBackground(Color.WHITE);
 		
 		JLabel login_label = new JLabel("GUESS LOGIN");
 		login_label.setBounds(0, 0, 500, 100);
@@ -278,11 +274,6 @@ public class LoginGUI extends JFrame {
 		view_n_hide_pw_label_1.setIcon(getIcon(23, 23, "view"));
 		
 		
-		JLabel fix_vnhpl_1 = new JLabel("");
-		fix_vnhpl_1.setBackground(Color.WHITE);
-		fix_vnhpl_1.setBounds(368, 179, 25, 25);
-		loginPanel_1.add(fix_vnhpl_1);
-		
 		JLabel login_label_1 = new JLabel("MANAGER LOGIN");
 		login_label_1.setHorizontalAlignment(SwingConstants.CENTER);
 		login_label_1.setForeground(Color.BLACK);
@@ -421,9 +412,22 @@ public class LoginGUI extends JFrame {
 		loginPanel.add(register);
 		pncard.add(loginPanel_1, "t2");
 		
+		register.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				new RegisterGUI();
+				setVisible(false);
+			}
+		});
+		
 		//------------background----------------//
 		getContentPane().add(pncard);
 		getContentPane().add(Background);
+		ImageIcon logo = new ImageIcon(getClass().getResource("/IMG/football.png"));
+		this.setIconImage(logo.getImage());
+		this.setTitle("Login");
 		this.setSize(1100, 600);
 		this.setVisible(true);
 		this.setResizable(false); //khoá thu phóng

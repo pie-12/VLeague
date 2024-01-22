@@ -1,4 +1,4 @@
-package GUI;
+package guessGUI;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
@@ -30,11 +30,29 @@ import javax.swing.JPanel;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Panel;
 import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.html.ImageView;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.CategoryLabelPositions;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.editor.DefaultChartEditorFactory;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 
@@ -48,12 +66,10 @@ import javax.swing.BorderFactory;
 import javax.swing.SwingConstants;
 
 
-public class RankGUI extends JFrame{
-	private JTable table;
+
+
+public class ChartGUI extends JFrame{
 	private Vector vector_Row, vector_Column;	
-	private Boolean use_duplicate_check = true; //true = insert/update, false = choose row
-	private JLabel team1_img_Label;
-    private JLabel team2_img_Label;
 	
 	public Icon getIcon(int width, int height, String link) {
 		Image image = new ImageIcon(getClass().getResource("/IMG/" + link + ".png")).getImage();
@@ -61,24 +77,24 @@ public class RankGUI extends JFrame{
 		return icon;
 	}
 	
-	public String get_idClub_from_nameclub(String nameclub) {
-		Connection conn = new DBController().getConnection();
-		String sql = "SELECT club_ID FROM vleague.footballclub WHERE club_Name = ?";
-		try {
-			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.setString(1, nameclub);
-			ResultSet resultSet = statement.executeQuery();
-			while (resultSet.next()) {
-				return resultSet.getString("club_ID");
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
 
-	public static Vector getvRow() {
+	public static String get_id(String club_name) {
+        Connection conn = new DBController().getConnection();
+        String sql = "SELECT club_id FROM vleague.footballclub WHERE club_name = ?";
+        try {
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, club_name);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("club_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+	
+	public static Vector getPoints() {
 		Connection conn = new DBController().getConnection();
 		Vector vD = new Vector();
 		String sql = "SELECT * FROM vleague.rank ORDER BY Points DESC";
@@ -88,12 +104,7 @@ public class RankGUI extends JFrame{
 			int i = 0;
 			while(resultSet.next()) {
 				Vector vtemp = new Vector();
-				vtemp.add(++i);
 				vtemp.add(resultSet.getString("club_name"));
-				vtemp.add(resultSet.getInt("Matches_played"));
-				vtemp.add(resultSet.getInt("Win"));
-				vtemp.add(resultSet.getInt("Draw"));
-				vtemp.add(resultSet.getInt("Lose"));
 				vtemp.add(resultSet.getInt("Points"));				
 				vD.add(vtemp);				
 			}
@@ -108,68 +119,7 @@ public class RankGUI extends JFrame{
 		return vD;
 	}
 	
-	public RankGUI() {		
-		this.setSize(1014, 542);
-		getContentPane().setLayout(null);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(218, 76, 727, 364);
-		getContentPane().add(scrollPane);
-		
-		JLabel club_Label = new JLabel("");
-		club_Label.setBounds(20, 76, 170, 170);
-		club_Label.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
-		club_Label.setHorizontalAlignment(JLabel.CENTER);
-		club_Label.setVerticalAlignment(JLabel.CENTER);
-
-		getContentPane().add(club_Label);
-		JPanel club_panel = new JPanel();
-		club_panel.setBackground(new Color(255, 255, 255, 100));
-		club_panel.setBounds(20, 76, 170, 170);
-		getContentPane().add(club_panel);
-		
-		//------------Hiển thị bảng------------//
-		vector_Column = new Vector();     
-		vector_Column.add("Rank");
-		vector_Column.add("Club name");
-		vector_Column.add("Matches played");
-		vector_Column.add("Won matches");
-		vector_Column.add("Draw matches");
-		vector_Column.add("Lost matches");
-		vector_Column.add("Points");	
-		table = new JTable();
-		vector_Row = getvRow();
-		table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 12));	
-		//table.getTableHeader().setResizingAllowed(false);
-		table.getTableHeader().setReorderingAllowed(false);
-		table.setModel(new DefaultTableModel(vector_Row, vector_Column));
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				try {
-	                int row = table.getSelectedRow();
-	                String nameclub = table.getValueAt(row, 1).toString();
-	                String selectedItem = get_idClub_from_nameclub(nameclub);
-	                if (selectedItem != null) {
-	                    Icon icon = getIcon(155, 155, selectedItem);                        
-	                    club_Label.setIcon(icon);
-	                } 
-	                
-				} catch (java.lang.ClassCastException e) {
-					// do nothing
-				}				
-              }				
-		});	
-		
-		scrollPane.setViewportView(table);
-		
-		JLabel ranking_label = new JLabel("RANKING");
-		ranking_label.setFont(new Font("Tahoma", Font.BOLD, 30));
-		ranking_label.setForeground(new Color(255, 255, 255));
-		ranking_label.setHorizontalAlignment(SwingConstants.CENTER);
-		ranking_label.setBounds(218, 10, 727, 44);
-		getContentPane().add(ranking_label);
-		
+	public ChartGUI() {		
 		//------------------------Button------------------------//
 		JPanel back_panel = new JPanel();
 		back_panel.setBounds(0, 0, 40, 40);
@@ -185,7 +135,7 @@ public class RankGUI extends JFrame{
 		
 		back_panel.addMouseListener(new java.awt.event.MouseAdapter() {
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				new MainGUI();
+				new guessGUI.RankGUI();
 				setVisible(false);
 			}
 
@@ -197,8 +147,40 @@ public class RankGUI extends JFrame{
 				back_panel.setBackground(Color.black);
 			}
 		});
-		//-------------------Set Background-------------------//
+		//------------------------Chart------------------------//
+		JLabel chart_label = new JLabel("CHART");
+		chart_label.setFont(new Font("Tahoma", Font.BOLD, 30));
+		chart_label.setForeground(new Color(255, 255, 255));
+		chart_label.setHorizontalAlignment(SwingConstants.CENTER);
+		chart_label.setBounds(50, 10, 940, 44);
+		getContentPane().add(chart_label);
 		
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        vector_Row = getPoints();        
+		for (int i = 0; i < vector_Row.size(); i++) {
+			Vector vtemp = (Vector) vector_Row.get(i);
+			String idclub = get_id((String) vtemp.get(0));
+			dataset.addValue((int) vtemp.get(1), "Points" , idclub);
+		}
+        JFreeChart chart = ChartFactory.createBarChart(
+                "", // Tiêu đề biểu đồ
+                "Team IDs", // Label trục x
+                "Points", // Label trục y
+                dataset // Dữ liệu
+        );
+
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setBounds(0, 0, 900, 400);
+
+
+        Panel panel = new Panel();
+        panel.setBounds(50, 65, 900, 400);
+        panel.setLayout(null);
+        panel.add(chartPanel);
+        getContentPane().add(panel);
+		//-------------------Set Background-------------------//
+		this.setSize(1014, 542);
+		getContentPane().setLayout(null);
 		JLabel Background = new JLabel("");
 		Background.setIcon(new ImageIcon(PlayerGUI.class.getResource("/IMG/gg.png")));
 		Background.setBounds(0, 0, 1000, 505);
@@ -213,6 +195,6 @@ public class RankGUI extends JFrame{
 	}
 
 	public static void main(String[] args) {
-		new RankGUI();
+		new ChartGUI();
 	}
 }

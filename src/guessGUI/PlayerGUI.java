@@ -1,4 +1,4 @@
-package GUI;
+package guessGUI;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -162,12 +162,6 @@ public class PlayerGUI extends JFrame{
 		return vD;
 	}
 	public PlayerGUI(){
-		//---------------Khai báo các component---------------//			
-		JPanel panel = new JPanel();
-		panel.setBounds(194, 450, 772, 37);
-		panel.setLayout(new FlowLayout(FlowLayout.LEFT, 118, 0));
-		getContentPane().add(panel);
-		panel.setOpaque(false);
 				
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(10, 51, 120, 322);
@@ -419,175 +413,6 @@ public class PlayerGUI extends JFrame{
 		});
 		panel_5.add(Search_Button);
 		
-		JButton Insert_Button = new JButton("Insert");		
-		Insert_Button.setBackground(new Color(255, 255, 255));
-		Insert_Button.setFocusable(false);
-		Insert_Button.setBounds(342, 400, 85, 21);
-		panel.add(Insert_Button);
-		
-		Insert_Button.addActionListener(new ActionListener() {		
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					Connection conn = new DBController().getConnection();
-					Vector vD = new Vector();
-					String sql = "INSERT INTO vleague.footballplayer VALUES (?,?,?,?,?,?,?,?,?)";
-					PreparedStatement statement = conn.prepareStatement(sql);
-					
-					statement.setString(1, ID_TextField.getText());
-					statement.setString(2, PlayerName_TextField.getText());
-					statement.setInt(3, Integer.parseInt(ShirtNumber_TextField.getText()));
-					statement.setString(4, Position_comboBox.getSelectedItem().toString());
-					statement.setInt(5, Integer.parseInt(Weight_TextField.getText()));
-					statement.setInt(6, Integer.parseInt(Height_TextField.getText()));
-					statement.setInt(7, Integer.parseInt(Age_TextField.getText()));
-					statement.setString(8, Nationality_TextField.getText());
-					String idClub = (String)get_idClub();
-					statement.setString(9, idClub);
-					statement.execute();
-					
-					JOptionPane.showMessageDialog(null, "Inserted successfully!");
-					Vector vector_Row = new Vector();
-					vector_Row = getvRow();
-					table.setModel(new DefaultTableModel(vector_Row, vector_Column));
-					scrollPane.setViewportView(table);				
-					
-				}
-				catch (java.lang.NumberFormatException e1) {
-					JOptionPane.showMessageDialog(null, "Please fill in all fields!");
-				}
-				catch (java.sql.SQLIntegrityConstraintViolationException e2) {
-					JOptionPane.showMessageDialog(null, "ID already taken, try another ID.");
-				}
-				catch (Exception e3) {
-				    e3.printStackTrace();
-				    JOptionPane.showMessageDialog(null, "Insert failed.");
-				}				
-			}
-		});		
-		
-		JButton Update_Button = new JButton("Update");
-		Update_Button.setBackground(new Color(255, 255, 255));
-		Update_Button.setBounds(463, 400, 85, 21);
-		Update_Button.setFocusable(false);
-		panel.add(Update_Button);		
-		
-		Update_Button.addActionListener(new ActionListener() {		
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					Connection conn = new DBController().getConnection();
-					DefaultTableModel model = (DefaultTableModel)table.getModel();
-					int index_row = table.getSelectedRow();
-					String ID_value = (String)model.getValueAt(index_row, 0);
-					String sql = "UPDATE footballplayer SET ID = ?, Name = ?, ShirtNumber = ?, Position = ?, Weight = ?, Height = ?, Age = ?, Nationality = ? WHERE ID = ?";
-					PreparedStatement statement = conn.prepareStatement(sql);
-					
-					statement.setString(1, ID_TextField.getText());
-					statement.setString(2, PlayerName_TextField.getText());
-					statement.setInt(3, Integer.parseInt(ShirtNumber_TextField.getText()));
-					statement.setString(4, Position_comboBox.getSelectedItem().toString());
-					statement.setInt(5, Integer.parseInt(Weight_TextField.getText()));
-					statement.setInt(6, Integer.parseInt(Height_TextField.getText()));
-					statement.setInt(7, Integer.parseInt(Age_TextField.getText()));
-					statement.setString(8, Nationality_TextField.getText());
-					statement.setString(9, ID_value);
-					statement.execute();
-		            
-					JOptionPane.showMessageDialog(null, "Updated successfully!");
-					Vector vector_Row = new Vector();
-					vector_Row = getvRow();
-					table.setModel(new DefaultTableModel(vector_Row, vector_Column));
-					scrollPane.setViewportView(table);				
-				}
-
-				catch (java.lang.ArrayIndexOutOfBoundsException e1) {
-					JOptionPane.showMessageDialog(null, "No row selected.");
-				}
-				catch (SQLIntegrityConstraintViolationException e2) {
-					JOptionPane.showMessageDialog(null, "ID already taken, try another ID.");
-				}
-				catch (Exception e3) {
-				    e3.printStackTrace();
-				    JOptionPane.showMessageDialog(null, "Update failed.");
-				}				
-			}
-		});
-		
-		JButton Delete_Button = new JButton("Delete");
-		Delete_Button.setBackground(new Color(255, 255, 255));
-		Delete_Button.setBounds(577, 400, 85, 21);
-		Delete_Button.setFocusable(false);
-		panel.add(Delete_Button);
-		
-		Delete_Button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Vector vtemp;
-				vtemp = getvRow();
-				int index_row = table.getSelectedRow();
-				int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this player?" , "Delete Confirm" , JOptionPane.YES_NO_CANCEL_OPTION);
-				if(confirm == 0) {
-					try {
-						Connection conn = new DBController().getConnection();
-						String idFootballplayer = ((Vector)vtemp.get(index_row)).get(0) + "";
-						String sql = "DELETE FROM footballplayer WHERE ID = ?";
-						PreparedStatement statement = conn.prepareStatement(sql);
-						statement.setString(1, idFootballplayer);
-						statement.execute();
-						
-						JOptionPane.showMessageDialog(null, "Deleted successfully.");
-						Vector vector_Row = new Vector();
-						vector_Row = getvRow();
-						table.setModel(new DefaultTableModel(vector_Row, vector_Column));
-						scrollPane.setViewportView(table);
-					}
-					catch (java.lang.ArrayIndexOutOfBoundsException e1) {
-						JOptionPane.showMessageDialog(null, "No row selected.");
-					}
-					catch (SQLException e2) {
-						e2.printStackTrace();
-						JOptionPane.showMessageDialog(null, "Delete failed.");
-					}
-				}
-			}
-		});		
-		
-		JButton Clear_Button = new JButton("Clear");
-		Clear_Button.setBackground(new Color(255, 255, 255));
-		Clear_Button.setBounds(694, 400, 85, 21);
-		Clear_Button.setFocusable(false);
-		panel.add(Clear_Button);
-		
-		Clear_Button.addActionListener(new ActionListener() {		
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					ID_TextField.setText("");
-					PlayerName_TextField.setText("");
-					ShirtNumber_TextField.setText("");
-					Position_comboBox.setSelectedIndex(-1);
-					Weight_TextField.setText("");
-					Height_TextField.setText("");
-					Age_TextField.setText("");
-					Nationality_TextField.setText("");					
-					Search_textField.setText("");
-					searchby_comBox.setSelectedIndex(-1);
-					club_Label.setIcon(null);
-					
-					Vector vector_Row = new Vector();
-					vector_Row = getvRow();
-					table.setModel(new DefaultTableModel(vector_Row, vector_Column));
-					scrollPane.setViewportView(table);
-					
-	                clubCombobox.setSelectedIndex(-1);
-					
-				} catch (Exception e2) {
-				    e2.printStackTrace();
-				    JOptionPane.showMessageDialog(null, "Clear failed.");
-				}				
-			} 
-		});		
-		
 		JPanel back_panel = new JPanel();
 		back_panel.setBounds(0, 0, 40, 40);
 		getContentPane().add(back_panel);
@@ -602,7 +427,7 @@ public class PlayerGUI extends JFrame{
 		
 		back_panel.addMouseListener(new java.awt.event.MouseAdapter() {
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				new MainGUI();
+				new guessGUI.MainGUI();
 				setVisible(false);
 			}
 
@@ -626,9 +451,6 @@ public class PlayerGUI extends JFrame{
 		ImageIcon logo = new ImageIcon(getClass().getResource("/IMG/football.png"));
 		this.setIconImage(logo.getImage());
 		this.setTitle("Player Management");	
-		JLabel label = new JLabel("New label");
-		label.setBounds(283, 10, 665, 58);
-		getContentPane().add(label);
 		this.setVisible(true);
 		this.setResizable(false); //khoá thu phóng
 		this.setLocationRelativeTo(null);

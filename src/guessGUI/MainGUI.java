@@ -1,4 +1,4 @@
-package GUI;
+package guessGUI;
 
 import java.awt.EventQueue;
 import java.awt.Image;
@@ -24,6 +24,8 @@ import java.awt.FlowLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JMenu;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
+
+import LOG.LoginGUI;
 
 public class MainGUI extends JFrame {
 	public Icon getIcon(int width, int height, String link) {
@@ -78,7 +80,7 @@ public class MainGUI extends JFrame {
 		
 		player_menu.addMouseListener(new java.awt.event.MouseAdapter() {
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				new PlayerGUI();
+				new guessGUI.PlayerGUI();
 				setVisible(false);
 			}
 			public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -112,7 +114,7 @@ public class MainGUI extends JFrame {
 		
 		schedule_menu.addMouseListener(new java.awt.event.MouseAdapter() {
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				new ScheduleGUI();
+				new guessGUI.ScheduleGUI();
 				setVisible(false);
 			}
 
@@ -147,7 +149,7 @@ public class MainGUI extends JFrame {
 		
 		result_menu.addMouseListener(new java.awt.event.MouseAdapter() {
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				new ResultGUI();
+				new guessGUI.ResultGUI();
 				setVisible(false);
 			}
 
@@ -182,7 +184,7 @@ public class MainGUI extends JFrame {
 		
 		ranking_menu.addMouseListener(new java.awt.event.MouseAdapter() {
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				new RankGUI();
+				new guessGUI.RankGUI();
 				setVisible(false);
 			}
 

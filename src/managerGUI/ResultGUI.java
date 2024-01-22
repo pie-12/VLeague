@@ -1,4 +1,4 @@
-package GUI;
+package managerGUI;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
@@ -313,19 +313,12 @@ public class ResultGUI extends JFrame{
 		score_2_textField.setHorizontalAlignment(JTextField.CENTER);
 		getContentPane().add(score_2_textField);
 		
-		JLabel lblNewLabel = new JLabel("Result");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setForeground(new Color(255, 255, 255));
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 23));
-		lblNewLabel.setBounds(20, 232, 282, 52);
-		getContentPane().add(lblNewLabel);
-		
 		//-----------------Button-----------------//
 		
 		JButton Update_Button = new JButton("Update");
 		Update_Button.setFocusable(false);
 		Update_Button.setBackground(Color.WHITE);
-		Update_Button.setBounds(121, 276, 75, 29);
+		Update_Button.setBounds(121, 274, 75, 29);
 		getContentPane().add(Update_Button);
 		
 		Update_Button.addActionListener(new ActionListener() {
@@ -371,7 +364,7 @@ public class ResultGUI extends JFrame{
 		
 		back_panel.addMouseListener(new java.awt.event.MouseAdapter() {
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				new MainGUI();
+				new managerGUI.MainGUI();
 				setVisible(false);
 			}
 
@@ -383,6 +376,13 @@ public class ResultGUI extends JFrame{
 				back_panel.setBackground(Color.black);
 			}
 		});
+		
+		JLabel lblNewLabel = new JLabel("Result");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setForeground(Color.WHITE);
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 27));
+		lblNewLabel.setBounds(312, 10, 630, 52);
+		getContentPane().add(lblNewLabel);
 		
 		//-------------------Set Background-------------------//
 		

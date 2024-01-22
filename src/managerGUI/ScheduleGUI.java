@@ -1,4 +1,4 @@
-package GUI;
+package managerGUI;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
@@ -104,7 +104,7 @@ public class ScheduleGUI extends JFrame{
 	public static Vector getvRow() {
 		Connection conn = new DBController().getConnection();
 		Vector vD = new Vector();
-		String sql = "SELECT * FROM vleague.schedule";
+		String sql = "SELECT * FROM vleague.schedule ORDER BY match_date ASC, match_time ASC";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			ResultSet resultSet = statement.executeQuery();
@@ -348,6 +348,7 @@ public class ScheduleGUI extends JFrame{
 		Insert_Button.setBackground(Color.WHITE);
 		button_panel.add(Insert_Button);
 		
+		
 		Insert_Button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (matchID_textField.getText().equals("") || team1_comboBox.getSelectedIndex() == -1 || team2_comboBox.getSelectedIndex() == -1 || stadium_comboBox.getSelectedIndex() == -1) {
@@ -368,7 +369,12 @@ public class ScheduleGUI extends JFrame{
                         JOptionPane.showMessageDialog(null, "Insert successfully!");
                         vector_Row = getvRow();
                         table.setModel(new DefaultTableModel(vector_Row, vector_Column));
-                    } catch (SQLException e1) {
+                    }
+                    catch (java.sql.SQLIntegrityConstraintViolationException e2) {
+						// TODO: handle exception
+                    JOptionPane.showMessageDialog(null, "ID already taken, try another ID.");
+					}
+                    catch (SQLException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
                     }
