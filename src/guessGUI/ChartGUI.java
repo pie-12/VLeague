@@ -160,7 +160,7 @@ public class ChartGUI extends JFrame{
 		for (int i = 0; i < vector_Row.size(); i++) {
 			Vector vtemp = (Vector) vector_Row.get(i);
 			String idclub = get_id((String) vtemp.get(0));
-			dataset.addValue((int) vtemp.get(1), "Points" , idclub);
+			dataset.addValue((int) vtemp.get(1), "" , idclub);
 		}
         JFreeChart chart = ChartFactory.createBarChart(
                 "", // Tiêu đề biểu đồ

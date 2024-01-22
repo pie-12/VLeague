@@ -40,9 +40,11 @@ import javax.swing.text.html.ImageView;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAnchor;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.editor.DefaultChartEditorFactory;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
@@ -65,7 +67,18 @@ import javax.swing.JButton;
 import javax.swing.BorderFactory;
 import javax.swing.SwingConstants;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.CategoryLabelPositions;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.data.category.DefaultCategoryDataset;
 
+import javax.swing.*;
+import java.awt.*;
+import java.util.Vector;
 
 
 public class ChartGUI extends JFrame{
@@ -160,8 +173,10 @@ public class ChartGUI extends JFrame{
 		for (int i = 0; i < vector_Row.size(); i++) {
 			Vector vtemp = (Vector) vector_Row.get(i);
 			String idclub = get_id((String) vtemp.get(0));
-			dataset.addValue((int) vtemp.get(1), "Points" , idclub);
+			dataset.addValue((int) vtemp.get(1), "" , idclub);
 		}
+        // Lấy đối tượng plot từ biểu đồ
+
         JFreeChart chart = ChartFactory.createBarChart(
                 "", // Tiêu đề biểu đồ
                 "Team IDs", // Label trục x
@@ -171,7 +186,13 @@ public class ChartGUI extends JFrame{
 
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setBounds(0, 0, 900, 400);
+        CategoryPlot plot = chart.getCategoryPlot();
 
+        NumberAxis yAxis = (NumberAxis) chart.getCategoryPlot().getRangeAxis();
+        yAxis.setTickUnit(new NumberTickUnit(1)); // Điều chỉnh số lượng đơn vị giữa các dấu chấm trên trục y
+        
+        CategoryPlot plott = chart.getCategoryPlot();
+        BarRenderer renderer = (BarRenderer) plott.getRenderer();
 
         Panel panel = new Panel();
         panel.setBounds(50, 65, 900, 400);
