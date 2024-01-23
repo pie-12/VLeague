@@ -76,8 +76,6 @@ public class ChartGUI extends JFrame{
 		Icon icon = new ImageIcon(image.getScaledInstance(width, height, image.SCALE_SMOOTH));
 		return icon;
 	}
-	
-
 	public static String get_id(String club_name) {
         Connection conn = new DBController().getConnection();
         String sql = "SELECT club_id FROM vleague.footballclub WHERE club_name = ?";

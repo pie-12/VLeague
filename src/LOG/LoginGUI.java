@@ -155,7 +155,7 @@ public class LoginGUI extends JFrame {
 					ps.setString(2, password);
 					java.sql.ResultSet rs = ps.executeQuery();
 					if (rs.next()) {
-						new MainGUI();
+						new guessGUI.MainGUI();
 						setVisible(false);
 					} else {
 						JOptionPane.showMessageDialog(null, "Wrong username or password!");
@@ -374,7 +374,7 @@ public class LoginGUI extends JFrame {
                     ps.setString(2, password);
                     java.sql.ResultSet rs = ps.executeQuery();
                     if (rs.next()) {
-                        new MainGUI();
+                        new managerGUI.MainGUI();
                         setVisible(false);
                     } else {
                         JOptionPane.showMessageDialog(null, "Wrong username or password!");

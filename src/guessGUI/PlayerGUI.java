@@ -400,7 +400,7 @@ public class PlayerGUI extends JFrame{
 					club_Label.setIcon(null);
 					
 					table.setModel(new DefaultTableModel(vector_Row, vector_Column));
-					scrollPane.setViewportView(table);							
+					scrollPane.setViewportView(table);							 
 				}
 				catch (java.lang.NullPointerException e1) {
 					JOptionPane.showMessageDialog(null, "Please select type of information you want to search.");
